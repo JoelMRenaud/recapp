@@ -1,0 +1,934 @@
+{
+  "name": "Client Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Find emails from a person",
+        "formDescription": "Searches your whole Gmail mailbox for messages sent by this person and saves them to the person_emails data table.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Person name",
+              "placeholder": "e.g. Jane Doe",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "buttonLabel": "Search",
+          "path": "joel-find-person-emails"
+        }
+      },
+      "id": "011cab23-9f78-4d68-bb8d-e1a3b7a7cf2b",
+      "name": "Enter Person Name",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        -96
+      ],
+      "webhookId": "7bce4209-41a3-445f-9451-5822579a2e78"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "includeSpamTrash": false,
+          "q": "=from:\"{{ $json[\"Person name\"] }}\"",
+          "readStatus": "both"
+        },
+        "options": {}
+      },
+      "id": "1817c75d-47bf-48fc-9814-5e8d70713976",
+      "name": "Search Gmail From Person",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        -96
+      ],
+      "webhookId": "4c6897c9-4ef8-4b53-8b06-ebfa654cb465",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XL0J4KWOXp5sWFeH",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YdZRt92jaQmYHMJC",
+          "cachedResultName": "person_emails"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "search_name": "={{ $(\"Enter Person Name\").first().json[\"Person name\"] }}",
+            "message_id": "={{ $json.id }}",
+            "thread_id": "={{ $json.threadId }}",
+            "from_name": "={{ $json.from?.value?.[0]?.name ?? \"\" }}",
+            "from_address": "={{ $json.from?.value?.[0]?.address ?? \"\" }}",
+            "to_address": "={{ $json.to?.text ?? \"\" }}",
+            "subject": "={{ $json.subject ?? \"\" }}",
+            "sent_at": "={{ $json.date }}",
+            "body_text": "={{ ($json.text ?? \"\").slice(0, 20000) }}",
+            "status": "new"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "search_name",
+              "displayName": "search_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "from_name",
+              "displayName": "from_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "from_address",
+              "displayName": "from_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "to_address",
+              "displayName": "to_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sent_at",
+              "displayName": "sent_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "body_text",
+              "displayName": "body_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "fd8898d3-aa33-4d72-997e-8010a39d1f34",
+      "name": "Save To person_emails",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        352,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YdZRt92jaQmYHMJC",
+          "cachedResultName": "person_emails"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "search_name",
+              "keyValue": "={{ $(\"Enter Person Name\").first().json[\"Person name\"] }}"
+            }
+          ]
+        },
+        "returnAll": true,
+        "orderBy": true,
+        "orderByColumn": "sent_at"
+      },
+      "id": "99254617-8789-461c-a46d-21935299a5a9",
+      "name": "Load Person Emails",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        -96
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "emails",
+        "options": {}
+      },
+      "id": "5a902d5d-b599-4f64-936b-1fec330992cc",
+      "name": "Combine Emails",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        816,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "about-me-profile",
+              "name": "about_me",
+              "type": "string",
+              "value": "I am Joel Renaud head sales person for n8n the ai workflow company, we are working to sell our product to tech companies. Our product offers people the ability to increase their productivity by creating ai workflows to simplify their tasks. "
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "8efbf709-8221-478b-8561-a2c37aaa34ad",
+      "name": "About Me",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=About me and my company:\n{{ $json.about_me }}\n\nI have a meeting the people in the given emails shortly. Here are the emails they have sent me, newest first:\n\n{{ $json.emails.filter((e, i, arr) => arr.findIndex(x => x.message_id === e.message_id) === i).slice(0, 40).map(e => \"---\\nDate: \" + e.sent_at + \"\\nFrom: \" + e.from_name + \" <\" + e.from_address + \">\\nSubject: \" + e.subject + \"\\n\\n\" + String(e.body_text || \"\").slice(0, 3000)).join(\"\\n\\n\") }}\n\nWrite my spoken pre-meeting briefing.",
+        "options": {
+          "systemMessage": "You prepare spoken pre-meeting briefings from a person's email history. The text you write will be converted directly to audio, so write it exactly as it should be spoken aloud. There may be multiple people listed in the emails. Assume they are all part of the same meetings, even if they seem from different companies. If two emails have the sender or comes from the same email, assume that those emails come from the same person. Make sure to use your own knowledge of the companies and brief on how my company and product can aid their company.\n\nLength: no more than 2 minutes spoken, which is at most 280 words. Shorter is fine if there is little to say.\n\nStyle rules:\n- Natural, conversational, confident tone, like a sharp assistant briefing me in the hallway. Speak to me as \"you\".\n- Short sentences. Plain words. Smooth spoken transitions such as \"First,\", \"Next,\", \"One thing to watch,\".\n- No markdown, no headings, no bullet points, no numbered lists, no emojis, no asterisks, no URLs, no email addresses, no email signatures.\n- Write dates and numbers the way they are spoken, for example \"last Tuesday\" or \"about twenty thousand dollars\".\n- No preamble and no sign-off beyond one closing line.\n\nCover, in this order and only when the emails support it: who this person is and our relationship in one or two sentences; the main topics and where each stands; any open questions, requests, commitments, or deadlines, and who owes what; tone or concerns to be aware of; and one or two suggested things to raise in the meeting.\n\nThe user message starts with a profile of me and my company. Use it to frame the briefing from my side: what this person likely wants from me, how my company can help, and what I should push for. Do not read the profile back to me. Use only what is in the emails and the profile. Never invent facts. Ignore newsletters, automated notifications, and quoted reply chains that repeat earlier content. Weight recent emails more heavily."
+        }
+      },
+      "id": "6c1e1500-7807-4063-8270-8741815e4461",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1360,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-5-5",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 5.5"
+        },
+        "options": {}
+      },
+      "id": "da4d0e17-8a5a-40a2-b4a2-4f726027aa07",
+      "name": "Anthropic Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.6,
+      "position": [
+        1200,
+        208
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "value": "IKne3meq5aSn9XLyUdCD",
+          "mode": "list",
+          "cachedResultName": "Charlie - Deep, Confident, Energetic"
+        },
+        "text": "={{ $json.output }}",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "id": "6897b897-239b-46ec-8a10-6442f877635f",
+      "name": "Convert text to speech",
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        0
+      ],
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "gFbjNQLnKGKyJ2dz",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "joelmrenaud@gmail.com",
+        "subject": "=Info for upcoming meeting.",
+        "message": "={{ $('AI Agent').item.json.output }}",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "id": "dc8b8812-0542-458a-b8a6-c3d86daa6bf0",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1904,
+        0
+      ],
+      "webhookId": "d3929525-dae0-4d8f-a8b4-1025225450bc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XL0J4KWOXp5sWFeH",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## EDIT THE ABOUT ME\nTo give the ai agent model more info about who you are.\n"
+      },
+      "id": "e277b7a0-4978-4db8-9c1d-68145e5538dd",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -144
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Change voice to your preference."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1616,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "51399b89-c151-4ea7-ba4c-f0cfae481565",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "batchSize": "=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        112
+      ],
+      "id": "3d6fb9c7-9391-466e-aad6-b736bd53ae38",
+      "name": "Loop Over Items",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "includeSpamTrash": false,
+          "q": "=from:{{ $json.email }} || to:{{ $json.email}}",
+          "readStatus": "both"
+        },
+        "options": {}
+      },
+      "id": "854bdff0-3f3a-4f6c-aad1-c7f9577bc501",
+      "name": "Search Gmail From Person1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        192,
+        128
+      ],
+      "webhookId": "4c6897c9-4ef8-4b53-8b06-ebfa654cb465",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XL0J4KWOXp5sWFeH",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YdZRt92jaQmYHMJC",
+          "cachedResultName": "person_emails"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message_id": "={{ $json.id }}",
+            "thread_id": "={{ $json.threadId }}",
+            "from_name": "={{ $json.from?.value?.[0]?.name ?? \"\" }}",
+            "from_address": "={{ $json.from?.value?.[0]?.address ?? \"\" }}",
+            "to_address": "={{ $json.to?.text ?? \"\" }}",
+            "subject": "={{ $json.subject ?? \"\" }}",
+            "sent_at": "={{ $json.date }}",
+            "body_text": "={{ ($json.text ?? \"\").slice(0, 20000) }}",
+            "status": "new"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "search_name",
+              "displayName": "search_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "thread_id",
+              "displayName": "thread_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "from_name",
+              "displayName": "from_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "from_address",
+              "displayName": "from_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "to_address",
+              "displayName": "to_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sent_at",
+              "displayName": "sent_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "body_text",
+              "displayName": "body_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7d9b9fbb-dabe-494f-a686-51d167c2b6ac",
+      "name": "Save To person_emails1",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "joelmrenaud@gmail.com",
+          "mode": "list",
+          "cachedResultName": "joelmrenaud@gmail.com"
+        },
+        "options": {}
+      },
+      "id": "56194215-98a3-4199-8cd9-8f6585fef84a",
+      "name": "Get Upcoming Events",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.4,
+      "position": [
+        -1040,
+        160
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "sUMhEMBpyU9WYQZD",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.id }}|{{ $json.start.dateTime }}",
+        "options": {}
+      },
+      "id": "5d4c5166-afd2-4d01-b441-19147d8408b9",
+      "name": "Only Once Per Event",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "id": "64825fa3-f1ac-424d-b943-bb87c82126dd",
+      "name": "Check Every 5 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1264,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1424dd15-761f-4e11-9a1f-3e5653719308",
+              "name": "attendees",
+              "value": "={{ ($json.attendees ?? []).filter(a => a.self !== true) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -448,
+        144
+      ],
+      "id": "290fbd82-1e81-4020-86f2-ee63348e2435",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "attendees",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1.1,
+      "position": [
+        -304,
+        128
+      ],
+      "id": "e5b2432c-1a0a-46d6-8c23-be6c2310f2f2",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "starts-within-30",
+              "leftValue": "={{ \n  new Date($json.start.dateTime).getTime() >= Date.now() &&\n  new Date($json.start.dateTime).getTime() <= Date.now() + 60 * 60 * 1000\n}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "14f3a161-d0e1-4bfb-ba9c-87983c2c312f",
+      "name": "Starts Within 1 hour",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -816,
+        160
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Enter Person Name": {
+      "main": [
+        [
+          {
+            "node": "Search Gmail From Person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Gmail From Person": {
+      "main": [
+        [
+          {
+            "node": "Save To person_emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save To person_emails": {
+      "main": [
+        [
+          {
+            "node": "Load Person Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Person Emails": {
+      "main": [
+        [
+          {
+            "node": "Combine Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Emails": {
+      "main": [
+        [
+          {
+            "node": "About Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "About Me": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert text to speech",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert text to speech": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Combine Emails",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Gmail From Person1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Gmail From Person1": {
+      "main": [
+        [
+          {
+            "node": "Save To person_emails1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save To person_emails1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Upcoming Events": {
+      "main": [
+        [
+          {
+            "node": "Starts Within 1 hour",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Only Once Per Event": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Every 5 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Get Upcoming Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Starts Within 1 hour": {
+      "main": [
+        [
+          {
+            "node": "Only Once Per Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "any",
+    "availableInMCP": false
+  },
+  "versionId": "f0b6cc06-7b41-4e9a-8c82-77ea17a60c8c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3c1056063d819a0894fc01decb94b1040d0789118c386bd5f5a1b92ad5ab5125"
+  },
+  "nodeGroups": [],
+  "id": "npS2SZBV0W6NcdKF",
+  "tags": []
+}
