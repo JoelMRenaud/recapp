@@ -1,6 +1,6 @@
 # **RECAPP** 
 
-#### **Automated pre-meeting audio briefings and client cheat sheets, powered by n8n.** 
+#### **Automated pre-meeting audio briefings and client cheat sheets, powered by n8n, Eleven labs and Claude.** 
 
 ## **Inspiration** 
 
