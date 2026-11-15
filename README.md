@@ -68,5 +68,5 @@ The trickiest part of the build was handling Google Calendar events with multipl
 
 ## **Team** 
 
-- Built at **UBC LOOP Hackathon (Nov 2026)** by Joel, Cody, Reo, and Eric. 
+- Built at **UBC LOOP Hackathon (Nov 2026)** by  Cody Luchangco, Eric Chen, Reo Suzuki and Joel Renaud. 
 
