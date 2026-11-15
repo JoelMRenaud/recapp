@@ -28,7 +28,7 @@ This project started with a real problem faced by one of our team member’s clo
 
 - **n8n:** Workflow orchestration, scheduling, multi-attendee looping, and data storage 
 
-- ● **Google Calendar & Gmail APIs:** Event tracking, email retrieval, and briefing delivery 
+- **Google Calendar & Gmail APIs:** Event tracking, email retrieval, and briefing delivery 
 
 - **Anthropic (Claude):** Contextual summarization and attendee relevance scoring 
 
