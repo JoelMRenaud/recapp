@@ -6,6 +6,10 @@
 
 This project started with a real problem faced by one of our team member’s close relatives. When you have back-to-back client meetings all day, you rarely have even 10 spare minutes to dig through old Gmail threads just to remember who you're talking to and what was discussed last time. We wanted to build an automated assistant that pulls that context together for you and delivers a quick, hands-free briefing right before you hop on a call. 
 
+## **Demo**
+
+▶ **[Watch the RECAPP Demo](https://www.youtube.com/watch?v=uPOI_BEDeyE)**
+
 ## **What It Does** 
 
 **RECAPP** gathers your past email history with a client, cross-references it with your own business profile, and sends both a written cheat sheet and an audio briefing straight to your inbox. It works in two ways: 
